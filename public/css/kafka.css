@@ -1,0 +1,75 @@
+.kafka-page {
+    width: min(100% - 2rem, 46rem);
+    margin: 3rem auto;
+}
+
+.kafka-nav {
+    margin-bottom: 2rem;
+}
+
+.kafka-nav a {
+    color: #55c5d7;
+}
+
+.kafka-page h1 {
+    margin-bottom: 0.5rem;
+}
+
+.kafka-page > p {
+    margin-bottom: 1.5rem;
+}
+
+.kafka-form {
+    display: grid;
+    gap: 0.75rem;
+    max-width: 42rem;
+}
+
+.kafka-form textarea {
+    width: 100%;
+    min-height: 12rem;
+    padding: 0.75rem;
+    color: #fff;
+    background: #303030;
+    border: 1px solid #777;
+    border-radius: 4px;
+    font: inherit;
+    resize: vertical;
+}
+
+.kafka-form textarea:focus {
+    outline: 2px solid #55c5d7;
+    outline-offset: 2px;
+}
+
+.kafka-form button {
+    justify-self: start;
+}
+
+.kafka-status {
+    max-width: 42rem;
+    padding: 0.75rem 1rem;
+    border-left: 4px solid;
+}
+
+.kafka-status--success {
+    border-color: #00bc8c;
+    background: rgba(0, 188, 140, 0.12);
+}
+
+.kafka-status--error {
+    border-color: #e74c3c;
+    background: rgba(231, 76, 60, 0.12);
+}
+
+.kafka-published {
+    max-width: 42rem;
+    margin-top: 2rem;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 600px) {
+    .kafka-page {
+        margin-top: 1.5rem;
+    }
+}

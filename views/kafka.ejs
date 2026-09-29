@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kafka trigger</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/kafka.css">
+</head>
+<body>
+    <main class="kafka-page">
+        <nav class="kafka-nav" aria-label="Main navigation">
+            <a href="/sentimental">Sentiment form</a>
+        </nav>
+
+        <h1>Kafka trigger</h1>
+        <p>Publish a post to the <code>posts-to-analyze</code> topic.</p>
+
+        <% if (status) { %>
+        <p class="kafka-status kafka-status--<%= status %>" role="status"><%= message %></p>
+        <% } %>
+
+        <form class="kafka-form" method="post" action="/kafka-trigger">
+            <label for="post-text">Post text</label>
+            <textarea id="post-text" name="texts" rows="8" required></textarea>
+            <button class="btn btn-primary" type="submit">Publish to Kafka</button>
+        </form>
+
+        <% if (submittedText) { %>
+        <section class="kafka-published">
+            <h2>Published message</h2>
+            <p><%= submittedText %></p>
+        </section>
+        <% } %>
+    </main>
+</body>
+</html>

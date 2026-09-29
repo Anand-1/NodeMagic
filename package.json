@@ -1,0 +1,33 @@
+{
+  "name": "sentiment-analysis",
+  "version": "1.0.0",
+  "description": "Sentiment Analysis api for feelin app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "typecheck": "tsc --noEmit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://amitsin6h@bitbucket.org/amitsin6h/sentiment-analysis.git"
+  },
+  "author": "Devconsole",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/amitsin6h/sentiment-analysis#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "kafkajs": "^2.2.4",
+    "mongoose": "^5.7.5",
+    "nodemon": "^3.1.14",
+    "sentiment": "^5.0.1",
+    "socket.io": "^2.4.0",
+    "tsx": "^4.23.15"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.3",
+    "@types/sentiment": "^5.0.4",
+    "typescript": "^7.0.2"
+  }
+}
