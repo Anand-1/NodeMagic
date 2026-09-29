@@ -1,71 +1,81 @@
-# sentiment-analysis
+# Sentiment Analysis
 
-![sentiment analysis](/images/sentimental.gif)
+![Sentiment analysis demo](/images/sentimental.gif)
 
-Sentiment Analysis api for feelin app
+An Express application for analyzing submitted text. The browser displays live sentiment results through Socket.IO. On submission, text with no more than three negative words is saved to MongoDB; otherwise, the result page reports that it did not meet the current threshold.
 
-## DESCRIPTION
+## Requirements
 
-![sentiment analysis](/images/sentimenatalAnalysis.png)
+- Node.js 22.12 or newer
+- MongoDB for saving submitted posts
+- A Kafka broker only if using the Kafka producer or consumer
 
-This project is for sentiment analysis of post/blog submitted by user and then analysising the post and giving it rating . If all goes right then the post/blog submitted by the user will store in mongoDB database otherwise it will show the user to remove abussive words and then resubmit it .
+## Setup
 
-### Setup
+Install dependencies and create a local environment file:
 
-Use Node.js 22.12 or newer. Copy `.env.example` to `.env`, then install dependencies:
+```sh
+npm install
+cp .env.example .env
+```
 
-    npm install
+Set `MONGO_URL` in `.env` to your MongoDB connection string. The server can start without MongoDB, but saving a post will fail until the database is reachable.
 
-### Run in development
+## Run
 
-    npm run dev
+Start the development server with automatic reload:
 
-### Build and run
+```sh
+npm run dev
+```
 
-    npm run build
-    npm start
+Open [http://localhost:8000/sentimental](http://localhost:8000/sentimental). The port can be changed with `PORT` in `.env`.
 
-### Frontend
+Build and start the compiled app:
 
-Go to http://127.0.0.1:8000/sentimental
-it will throw you a basic form write your post and submit it
+```sh
+npm run build
+npm start
+```
 
-This project also uses socket.io show it will show the realtime update of the score and words.
+## Kafka
 
-All you can submit your post.
+Start a Kafka broker, then run the consumer:
 
-If all goes write (means post is good ) then it will stored in database and give us the response saved. Otherwise it will show the harmful words
-
-## Kafka scenario
-
-The Kafka example publishes submitted post text to `posts-to-analyze`. A consumer scores each post and prints the analysis with an `accepted` flag (posts with more than three negative words are rejected).
-
-The implementation is in `src/kafkaImplementation.ts`. Run `npm run type-check` to validate types.
-
-Start a Kafka broker, then run the consumer in one terminal:
-
-    npm run kafka -- consumer
+```sh
+npm run kafka -- consumer
+```
 
 Publish a post from another terminal:
 
-    npm run kafka -- producer "This is a wonderful day"
+```sh
+npm run kafka -- producer "This is a wonderful day"
+```
 
-Set `KAFKA_BROKERS` to a comma-separated broker list, or override `KAFKA_TOPIC`, `KAFKA_CLIENT_ID`, and `KAFKA_GROUP_ID` as needed. Defaults are `localhost:9092`, `posts-to-analyze`, `sentiment-analysis`, and `sentiment-analysis-workers`.
+The consumer analyzes messages from the configured topic and prints each result with an `accepted` flag. A post is accepted when it has at most three negative words.
 
-### Quality checks
+| Variable          | Default                      | Purpose                          |
+| ----------------- | ---------------------------- | -------------------------------- |
+| `KAFKA_BROKERS`   | `localhost:9092`             | Comma-separated broker addresses |
+| `KAFKA_TOPIC`     | `posts-to-analyze`           | Topic used for posts             |
+| `KAFKA_CLIENT_ID` | `sentiment-analysis`         | Kafka client identifier          |
+| `KAFKA_GROUP_ID`  | `sentiment-analysis-workers` | Consumer group identifier        |
 
-    npm run build
-    npm run type-check
-    npm run lint
-    npm run test:run
+## Quality Checks
 
-## LIMITATIONS
+```sh
+npm run build
+npm run type-check
+npm run lint
+npm run format:check
+npm run test:run
+```
 
-### Maybe
+## Project Layout
 
-one language is supported at a time.
-If add our own language then we need to define every Words and its score
-
-### TODO
-
-improved the logic of sentiment analysis in if block
+- `src/index.ts`: Express and Socket.IO server setup
+- `src/controllers/`: Form and Kafka request handlers
+- `src/routes/`: HTTP routes
+- `src/models/`: MongoDB post model
+- `src/kafkaImplementation.ts`: Kafka producer, consumer, and sentiment analysis
+- `views/` and `public/`: EJS templates and static assets

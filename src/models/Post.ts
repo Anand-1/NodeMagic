@@ -11,6 +11,7 @@ const postSchema = new mongoose.Schema<PostDocument>({
     type: String,
   },
   date: {
+    // Mongoose calls this for each document, so creation times are not shared.
     default: () => new Date().toString(),
     type: String,
   },

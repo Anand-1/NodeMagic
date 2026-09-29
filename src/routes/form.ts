@@ -1,11 +1,12 @@
 import express from "express";
 
-import { handleSubmit, submitPost } from "../controllers/formController.js";
-import { showTriggerForm, triggerKafka } from "../controllers/kafkaController.js";
+import { analyzeAndSavePost, renderSentimentForm } from "../controllers/formController.js";
+import { publishPostToKafka, renderKafkaTriggerForm } from "../controllers/kafkaController.js";
 
-export const formRouter = express.Router();
+// Keep the sentiment form and Kafka trigger endpoints together for app registration.
+export const sentimentAndKafkaRouter = express.Router();
 
-formRouter.get("/kafka-trigger", showTriggerForm);
-formRouter.post("/kafka-trigger", triggerKafka);
-formRouter.get("/sentimental", handleSubmit);
-formRouter.post("/sentimental", submitPost);
+sentimentAndKafkaRouter.get("/kafka-trigger", renderKafkaTriggerForm);
+sentimentAndKafkaRouter.post("/kafka-trigger", publishPostToKafka);
+sentimentAndKafkaRouter.get("/sentimental", renderSentimentForm);
+sentimentAndKafkaRouter.post("/sentimental", analyzeAndSavePost);

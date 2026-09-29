@@ -65,6 +65,7 @@ export async function publishPost(text: unknown): Promise<KafkaPost> {
     });
   } finally {
     if (connected) {
+      // Release the connection even when the broker rejects the send.
       await producer.disconnect();
     }
   }
@@ -109,6 +110,7 @@ export async function startConsumer(
   try {
     await consumer.connect();
     connected = true;
+    // Replay existing records when this consumer group has no saved offset yet.
     await consumer.subscribe({ fromBeginning: true, topic });
     await consumer.run({
       eachMessage: (payload) => processMessage(payload, onResult),
@@ -122,6 +124,7 @@ export async function startConsumer(
 
   let stopped = false;
   return async () => {
+    // Shutdown may be requested more than once, such as during repeated signals.
     if (stopped) {
       return;
     }
@@ -145,6 +148,7 @@ function parsePost(value: Buffer | null): KafkaPost {
   }
 
   const post = parsed as Record<string, unknown>;
+  // Reject malformed events individually so they do not stop later messages in the partition.
   if (typeof post.id !== "string" || typeof post.submittedAt !== "string") {
     throw new Error("Message payload is missing post metadata");
   }
@@ -180,6 +184,7 @@ function validatePostText(text: unknown): string {
   return text.trim();
 }
 
+// Run the producer/consumer CLI only when this module is the process entry point.
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   runCli().catch((error: unknown) => {
     console.error(error instanceof Error ? error.message : String(error));

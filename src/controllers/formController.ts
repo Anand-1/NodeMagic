@@ -1,21 +1,26 @@
 import type { Request, RequestHandler, Response } from "express";
+import type { ParamsDictionary } from "express-serve-static-core";
 
 import Sentiment from "sentiment";
 
 import { Post } from "../models/Post.js";
+import { getSubmittedText } from "../utils/submittedText.js";
 
-export const handleSubmit: RequestHandler = (_request, response) => {
+type FormHandler = RequestHandler<ParamsDictionary, unknown, unknown>;
+type FormRequest = Request<ParamsDictionary, unknown, unknown>;
+type FormResponse = Response<unknown>;
+
+export const renderSentimentForm: RequestHandler = (_request, response) => {
   response.render("form", { msg: "somethingto test" });
 };
 
-export const submitPost: RequestHandler = (request, response, next) => {
-  void submitPostRequest(request, response).catch(next);
+export const analyzeAndSavePost: FormHandler = (request, response, next) => {
+  void analyzeAndSavePostRequest(request, response).catch(next);
 };
 
-async function submitPostRequest(request: Request, response: Response): Promise<void> {
-  const body: unknown = request.body;
-  const postText: unknown = typeof body === "object" && body !== null && "texts" in body ? body.texts : undefined;
-  if (typeof postText !== "string" || postText.trim().length === 0) {
+async function analyzeAndSavePostRequest(request: FormRequest, response: FormResponse): Promise<void> {
+  const postText = getSubmittedText(request.body);
+  if (postText === undefined) {
     response.render("sucess", { msg: "please type anything" });
     return;
   }
@@ -36,6 +41,7 @@ async function submitPostRequest(request: Request, response: Response): Promise<
   }
 
   try {
+    // Persist only posts that pass the negative-word threshold shown in the response.
     await Post.create({ content: postText });
     response.render("sucess", {
       comparative,
@@ -47,6 +53,7 @@ async function submitPostRequest(request: Request, response: Response): Promise<
       words,
     });
   } catch (error) {
+    // Convert database failures into a service response instead of an unhandled rejection.
     console.error("Unable to save post:", error);
     response.status(503).render("sucess", { msg: "Unable to save the post. Check the database connection." });
   }

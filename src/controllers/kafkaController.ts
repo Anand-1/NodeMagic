@@ -1,18 +1,23 @@
 import type { Request, RequestHandler, Response } from "express";
+import type { ParamsDictionary } from "express-serve-static-core";
 
 import { publishPost } from "../kafkaImplementation.js";
+import { getSubmittedText } from "../utils/submittedText.js";
 
-export const showTriggerForm: RequestHandler = (_request, response) => {
+type KafkaHandler = RequestHandler<ParamsDictionary, unknown, unknown>;
+type KafkaRequest = Request<ParamsDictionary, unknown, unknown>;
+type KafkaResponse = Response<unknown>;
+
+export const renderKafkaTriggerForm: RequestHandler = (_request, response) => {
   response.render("kafka", { message: null, status: null, submittedText: null });
 };
 
-export const triggerKafka: RequestHandler = (request, response, next) => {
-  void triggerKafkaRequest(request, response).catch(next);
+export const publishPostToKafka: KafkaHandler = (request, response, next) => {
+  void publishPostToKafkaRequest(request, response).catch(next);
 };
 
-async function triggerKafkaRequest(request: Request, response: Response): Promise<void> {
-  const body: unknown = request.body;
-  const postText = typeof body === "object" && body !== null && "texts" in body ? body.texts : undefined;
+async function publishPostToKafkaRequest(request: KafkaRequest, response: KafkaResponse): Promise<void> {
+  const postText = getSubmittedText(request.body);
   try {
     const post = await publishPost(postText);
     response.render("kafka", {
