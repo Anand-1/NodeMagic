@@ -86,7 +86,7 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
         // alert('alt')
-        let socket = io("http://localhost:8000");
+        let socket = io();
         let textarea=document.querySelector('#textarea');
         runAnalysis= (v) =>{
             socket.emit('runanaysis',v)
