@@ -6,47 +6,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Fill the form</title>
-    <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/style.css">
 </head>
-
-
-
 
 <body class="grid-2">
 
 
-    <div class="flex card border-primary block mt-10 fnt">
-        <form method="post" class="form-group flex  card-body">
-            <label class="card-title mb-15" for="textarea">Enter your text/blog</label>
-            <textarea class="form-control mb-15" name="texts" id="textarea" oninput='runAnalysis(this.value)' cols="30" rows="10"></textarea>
-            <button class="btn btn-secondary" type="submit">Submit</button>
+    <div class="card">
+        <form method="post" class="form-group card-body">
+            <label class="card-title" for="textarea">Enter your text/blog</label>
+            <textarea class="form-control" name="texts" id="textarea" oninput='runAnalysis(this.value)' cols="30" rows="10"></textarea>
+            <button class="btn" type="submit">Submit</button>
             <a href="/kafka-trigger">Open Kafka trigger</a>
         </form>
     </div>
 
     <div class="flex-2">
 
-        <body class="flex" style="height:100%">
-            <p id="message" class="alert-info alert">
+        <body style="height:100%">
+            <p id="message" class="alert">
                 Start typing in blog area and see real-time sentimental analysis
             </p>
             <div class="grid-3">
-                <div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
+                <div class="card">
                     <div class="card-header">Score is :-</div>
                     <div class="card-body">
-                        <p class="card-text " id="score">
+                        <p class="card-text" id="score">
                         </p>
                     </div>
                 </div>
-                <div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
+                <div class="card">
                     <div class="card-header">comparative is :-</div>
                     <div class="card-body">
                         <p class="card-text" id="comparative">
                         </p>
                     </div>
                 </div>
-                <div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
+                <div class="card">
                     <div class="card-header">Tokens in submitted post is :-</div>
                     <div class="card-body">
                         <p class="card-text" id="tokens">
@@ -54,7 +50,7 @@
                     </div>
                 </div>
 
-                <div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
+                <div class="card">
                     <div class="card-header">Words in submitted post is :-</div>
                     <div class="card-body">
                         <p class="card-text" id="words">
@@ -62,7 +58,7 @@
                     </div>
                 </div>
 
-                <div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
+                <div class="card">
                     <div class="card-header">Positive words in submitted post is :-</div>
                     <div class="card-body">
                         <p class="card-text" id="positive-words">
@@ -70,7 +66,7 @@
                     </div>
                 </div>
 
-                <div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
+                <div class="card">
                     <div class="card-header">Negative in submitted post is :-</div>
                     <div class="card-body">
                         <p class="card-text" id="negative-words">
@@ -87,7 +83,6 @@
     <script>
         // alert('alt')
         let socket = io();
-        let textarea=document.querySelector('#textarea');
         runAnalysis= (v) =>{
             socket.emit('runanaysis',v)
 
